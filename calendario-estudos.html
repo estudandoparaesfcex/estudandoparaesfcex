@@ -35,26 +35,32 @@
 
   /* ── HEADER ── */
   header {
-    background: var(--black);
+    background: var(--green);
     color: var(--white);
-    padding: 18px 40px;
-    display: flex;
+    padding: 0 32px;
+    height: 58px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 16px;
   }
-  .header-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.01em;
-    font-weight: 400;
+  .header-left  { display: flex; align-items: center; }
+  .header-center{ display: flex; align-items: center; justify-content: center; }
+  .header-right { display: flex; align-items: center; justify-content: flex-end; }
+
+  .header-site-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: rgba(255,255,255,0.92);
   }
-  .header-sub {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-top: 2px;
+  .header-page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #fff;
+    letter-spacing: 0.02em;
   }
 
   .admin-btn {
@@ -194,52 +200,49 @@
     background: var(--blue);
     color: var(--white);
     border-radius: var(--radius-lg);
-    padding: 22px 28px;
+    padding: 20px 28px;
     display: none;
   }
   .progress-bar-section.visible { display: block; }
   .prog-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 18px;
+    align-items: center;
+    margin-bottom: 14px;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
+  }
+  .prog-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
   }
   .prog-title {
     font-family: 'DM Serif Display', serif;
     font-size: 1.05rem;
     font-weight: 400;
   }
-  .prog-subtitle { font-size: 0.75rem; opacity: 0.5; margin-top: 3px; }
-  .prog-stats {
-    display: flex;
-    gap: 32px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-  .prog-stat { text-align: center; }
-  .prog-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    font-weight: 400;
-    color: rgba(255,255,255,0.9);
-    line-height: 1;
-  }
-  .prog-lbl {
-    font-size: 0.65rem;
+  .prog-days-badge {
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    padding: 3px 12px;
+    font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-top: 4px;
+    white-space: nowrap;
+  }
+  .prog-subtitle { font-size: 0.72rem; opacity: 0.45; margin-top: 2px; }
+  .prog-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .prog-track {
+    flex: 1;
     background: rgba(255,255,255,0.15);
     border-radius: 99px;
     height: 8px;
     overflow: hidden;
-    margin-bottom: 7px;
   }
   .prog-fill {
     height: 100%;
@@ -247,11 +250,13 @@
     background: rgba(255,255,255,0.85);
     transition: width 0.7s ease;
   }
-  .prog-ends {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    opacity: 0.4;
+  .prog-pct-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.7;
+    white-space: nowrap;
+    min-width: 36px;
+    text-align: right;
   }
   .prog-alter-btn {
     background: rgba(255,255,255,0.12);
@@ -365,6 +370,95 @@
   }
   .cell-event-chip.official  { background: var(--green-light); color: var(--green); }
   .cell-event-chip.personal  { background: var(--blue-light);  color: var(--blue);  }
+
+  /* ── ALL EVENTS LIST ── */
+  .all-events-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .all-events-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .all-events-toggle:hover { background: var(--bg); }
+  .all-events-toggle-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .all-events-count {
+    background: var(--green);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+  .all-events-chevron {
+    font-size: 0.9rem;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .all-events-chevron.open { transform: rotate(180deg); }
+  .all-events-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .all-events-body.visible { display: block; }
+  .all-ev-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 24px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    transition: background 0.12s;
+  }
+  .all-ev-item:last-child { border-bottom: none; }
+  .all-ev-item:hover { background: var(--bg); }
+  .all-ev-date-col {
+    min-width: 100px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .all-ev-info { flex: 1; min-width: 0; }
+  .all-ev-name { font-weight: 600; color: var(--black); }
+  .all-ev-time { font-size: 0.73rem; color: var(--muted); margin-top: 1px; }
+  .all-ev-tag {
+    font-size: 0.63rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .all-ev-tag.official { background: var(--green-light); color: var(--green); }
+  .all-ev-tag.personal { background: var(--blue-light);  color: var(--blue);  }
+  .all-ev-del {
+    background: none; border: none; cursor: pointer;
+    color: rgba(0,0,0,0.18); font-size: 0.85rem;
+    padding: 0 3px; flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .all-ev-del:hover { color: #c00; }
+  .all-ev-empty { padding: 18px 24px; font-size: 0.85rem; color: var(--muted); font-style: italic; }
 
   /* ── ADD EVENT (bottom, collapsible) ── */
   .add-event-section {
@@ -617,11 +711,13 @@
 <body>
 
 <header>
-  <div>
-    <div class="header-title">Calendario de Estudos</div>
-    <div class="header-sub">Concurso Publico</div>
+  <div class="header-left">
+    <div class="header-site-name">Estudando para ESFCEX</div>
   </div>
-  <div id="admin-area">
+  <div class="header-center">
+    <div class="header-page-title">Calendário</div>
+  </div>
+  <div class="header-right" id="admin-area">
     <button class="admin-btn" onclick="toggleAdmin()">Modo Admin</button>
   </div>
 </header>
@@ -638,19 +734,18 @@
   <div class="progress-bar-section" id="progress-section">
     <div class="prog-top">
       <div>
-        <div class="prog-title" id="prog-name">—</div>
+        <div class="prog-title-row">
+          <div class="prog-title" id="prog-name">—</div>
+          <div class="prog-days-badge" id="prog-days">— dias</div>
+        </div>
         <div class="prog-subtitle" id="prog-meta">—</div>
       </div>
       <button class="prog-alter-btn" id="prog-admin-btn" onclick="openProgressModal()" style="display:none;">Alterar</button>
     </div>
-    <div class="prog-stats">
-      <div class="prog-stat"><div class="prog-num" id="prog-days">—</div><div class="prog-lbl">Dias restantes</div></div>
-      <div class="prog-stat"><div class="prog-num" id="prog-elapsed">—</div><div class="prog-lbl">Dias passados</div></div>
-      <div class="prog-stat"><div class="prog-num" id="prog-total">—</div><div class="prog-lbl">Total de dias</div></div>
-      <div class="prog-stat"><div class="prog-num" id="prog-pct-num">—%</div><div class="prog-lbl">Concluido</div></div>
+    <div class="prog-bar-row">
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-pct-label" id="prog-pct-num">0%</div>
     </div>
-    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-    <div class="prog-ends"><span id="prog-start-lbl">Inicio</span><span id="prog-end-lbl">Fim</span></div>
   </div>
 
   <!-- 3. CALENDARIO -->
@@ -678,6 +773,18 @@
   <div class="event-detail-panel" id="detail-panel">
     <div class="detail-date" id="detail-date">—</div>
     <ul class="detail-list" id="detail-list"></ul>
+  </div>
+
+  <!-- LISTA DE TODOS OS EVENTOS -->
+  <div class="all-events-section">
+    <div class="all-events-toggle" onclick="toggleAllEvents()">
+      <span class="all-events-toggle-label">
+        Todos os eventos
+        <span class="all-events-count" id="all-events-count">0</span>
+      </span>
+      <span class="all-events-chevron" id="all-events-chevron">▾</span>
+    </div>
+    <div class="all-events-body" id="all-events-body"></div>
   </div>
 
   <!-- 4. ADICIONAR EVENTO (colapsavel) -->
@@ -843,6 +950,9 @@ function init() {
   renderCountdowns();
   renderProgressBar();
   renderDetailPanel();
+  // update count badge on load
+  const allCount = pubEvs.length + persEvs.length;
+  document.getElementById('all-events-count').textContent = allCount;
 }
 
 function changeMonth(dir) {
@@ -961,6 +1071,59 @@ function renderDetailPanel() {
   panel.classList.add('visible');
 }
 
+function toggleAllEvents() {
+  const body    = document.getElementById('all-events-body');
+  const chevron = document.getElementById('all-events-chevron');
+  const open    = body.classList.toggle('visible');
+  chevron.classList.toggle('open', open);
+  if (open) renderAllEvents();
+}
+
+function renderAllEvents() {
+  const body  = document.getElementById('all-events-body');
+  const count = document.getElementById('all-events-count');
+  const all   = [
+    ...pubEvs.map(e  => ({...e, type:'official'})),
+    ...persEvs.map(e => ({...e, type:'personal'}))
+  ].sort((a,b) => a.startDate.localeCompare(b.startDate));
+
+  count.textContent = all.length;
+  body.innerHTML = '';
+
+  if (all.length === 0) {
+    body.innerHTML = '<div class="all-ev-empty">Nenhum evento cadastrado ainda.</div>';
+    return;
+  }
+
+  all.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'all-ev-item';
+
+    let dateStr = fmtDisplay(ev.startDate);
+    if (ev.endDate && ev.endDate !== ev.startDate) dateStr += ` → ${fmtDisplay(ev.endDate)}`;
+
+    let timeStr = '';
+    if (ev.startTime || ev.endTime) {
+      timeStr = [ev.startTime, ev.endTime].filter(Boolean).join(' – ');
+    }
+
+    const canDel = ev.type === 'personal' || isAdmin;
+    row.innerHTML = `
+      <div class="all-ev-date-col">${dateStr}</div>
+      <div class="all-ev-info">
+        <div class="all-ev-name">${ev.name}</div>
+        ${timeStr ? `<div class="all-ev-time">⏰ ${timeStr}</div>` : ''}
+        ${ev.desc  ? `<div class="all-ev-time">${ev.desc}</div>` : ''}
+      </div>
+      <span class="all-ev-tag ${ev.type}">${ev.type === 'official' ? 'Oficial' : 'Pessoal'}</span>
+      ${canDel ? `<button class="all-ev-del" onclick="deleteEvent('${ev.id}','${ev.type}')">✕</button>` : ''}
+    `;
+    body.appendChild(row);
+  });
+
+  count.textContent = all.length;
+}
+
 function toggleAddForm() {
   const body=document.getElementById('add-body');
   const icon=document.getElementById('toggle-icon');
@@ -993,7 +1156,7 @@ function addEvent() {
   document.getElementById('ev-desc').value='';
   document.getElementById('ev-countdown').checked=false;
 
-  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel();
+  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel(); renderAllEvents();
 }
 
 function deleteEvent(id,type) {
@@ -1004,7 +1167,7 @@ function deleteEvent(id,type) {
     persEvs=persEvs.filter(e=>e.id!==id); savePers();
   }
   if (progCfg&&progCfg.eventId===id) { progCfg=null; saveProg(); }
-  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel();
+  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel(); renderAllEvents();
 }
 
 function renderCountdowns() {
@@ -1075,15 +1238,11 @@ function renderProgressBar() {
   const remain =Math.max(0,Math.ceil((end-today)/86400000));
   const pct    =Math.min(100,Math.round((elapsed/total)*100));
 
-  document.getElementById('prog-name').textContent   =ev.name;
-  document.getElementById('prog-meta').textContent   =`${fmtDisplay(startDate)} — ${fmtDisplay(ev.startDate)}`;
-  document.getElementById('prog-days').textContent   =remain;
-  document.getElementById('prog-elapsed').textContent=elapsed;
-  document.getElementById('prog-total').textContent  =total;
-  document.getElementById('prog-pct-num').textContent=`${pct}%`;
-  document.getElementById('prog-fill').style.width   =`${pct}%`;
-  document.getElementById('prog-start-lbl').textContent=fmtDisplay(startDate);
-  document.getElementById('prog-end-lbl').textContent  =fmtDisplay(ev.startDate);
+  document.getElementById('prog-name').textContent   = ev.name;
+  document.getElementById('prog-meta').textContent   = `${fmtDisplay(startDate)} — ${fmtDisplay(ev.startDate)}`;
+  document.getElementById('prog-days').textContent   = `${remain} dia${remain!==1?'s':''} restantes`;
+  document.getElementById('prog-pct-num').textContent= `${pct}%`;
+  document.getElementById('prog-fill').style.width   = `${pct}%`;
   document.getElementById('prog-admin-btn').style.display=isAdmin?'block':'none';
 }
 
