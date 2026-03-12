@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #e9eeeb;
+    --black:     #000000;
+    --green:     #215732;
+    --blue:      #00587c;
+    --white:     #ffffff;
+    --surface:   #f4f7f5;
+    --border:    rgba(0,0,0,0.12);
+    --border-md: rgba(0,0,0,0.2);
+    --muted:     rgba(0,0,0,0.45);
+    --green-light: #d4e8da;
+    --blue-light:  #cde7f0;
+    --radius:    6px;
+    --radius-lg: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--black);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--black);
+    color: var(--white);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+  .header-sub {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .admin-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.8);
+    padding: 7px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    transition: all 0.18s;
+  }
+  .admin-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .admin-badge {
+    background: var(--green);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: var(--radius);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .admin-exit {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 5px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    margin-left: 8px;
+    transition: all 0.18s;
+  }
+  .admin-exit:hover { color: #fff; }
+
+  /* ── PAGE ── */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── COUNTDOWNS ── */
+  .countdowns-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .countdown-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    min-width: 172px;
+    position: relative;
+    flex: 1;
+  }
+  .countdown-card.official {
+    background: var(--green);
+    color: var(--white);
+    border-color: transparent;
+  }
+  .countdown-card.featured-card {
+    border: 2px solid var(--blue);
+  }
+  .cd-type {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .cd-featured-pill {
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.58rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    opacity: 1;
+    letter-spacing: 0.06em;
+  }
+  .cd-days {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--green);
+    font-weight: 400;
+  }
+  .countdown-card.official .cd-days { color: rgba(255,255,255,0.9); }
+  .cd-name { font-size: 0.85rem; margin-top: 5px; opacity: 0.85; font-weight: 500; }
+  .cd-date { font-size: 0.72rem; opacity: 0.45; margin-top: 2px; }
+
+  .cd-actions {
+    position: absolute;
+    top: 10px; right: 10px;
+    display: flex;
+    gap: 2px;
+  }
+  .cd-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.82rem;
+    opacity: 0.3;
+    color: inherit;
+    padding: 3px 5px;
+    border-radius: 4px;
+    transition: opacity 0.15s, background 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .cd-btn:hover { opacity: 1; background: rgba(128,128,128,0.15); }
+  .cd-btn.active { opacity: 1; color: var(--blue); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-section {
+    background: var(--blue);
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 22px 28px;
+    display: none;
+  }
+  .progress-bar-section.visible { display: block; }
+  .prog-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .prog-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+  }
+  .prog-subtitle { font-size: 0.75rem; opacity: 0.5; margin-top: 3px; }
+  .prog-stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .prog-stat { text-align: center; }
+  .prog-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.9);
+    line-height: 1;
+  }
+  .prog-lbl {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-top: 4px;
+  }
+  .prog-track {
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 7px;
+  }
+  .prog-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.85);
+    transition: width 0.7s ease;
+  }
+  .prog-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    opacity: 0.4;
+  }
+  .prog-alter-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.85);
+    padding: 5px 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    transition: background 0.18s;
+  }
+  .prog-alter-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── CALENDAR ── */
+  .calendar-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .cal-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-month-label {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+  }
+  .cal-nav-group { display: flex; align-items: center; gap: 6px; }
+  .cal-nav-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    width: 30px; height: 30px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--black);
+    transition: background 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cal-nav-btn:hover { background: var(--green-light); }
+  .cal-today-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--black);
+    transition: background 0.15s;
+  }
+  .cal-today-btn:hover { background: var(--green-light); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .cal-dayname {
+    text-align: center;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 0 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-cell {
+    min-height: 88px;
+    padding: 6px 7px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.12s;
+    vertical-align: top;
+    position: relative;
+  }
+  .cal-cell:nth-child(7n) { border-right: none; }
+  .cal-cell:hover { background: var(--bg); }
+  .cal-cell.other-month { opacity: 0.28; cursor: default; pointer-events: none; }
+  .cal-cell.selected { background: #eaf4f0; }
+  .cal-cell.today .cell-num {
+    background: var(--black);
+    color: var(--white);
+    border-radius: 50%;
+  }
+  .cell-num {
+    font-size: 0.8rem;
+    font-weight: 500;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 4px;
+  }
+  .cell-events { display: flex; flex-direction: column; gap: 2px; }
+  .cell-event-chip {
+    font-size: 0.67rem;
+    font-weight: 500;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .cell-event-chip.official  { background: var(--green-light); color: var(--green); }
+  .cell-event-chip.personal  { background: var(--blue-light);  color: var(--blue);  }
+
+  /* ── ADD EVENT (bottom, collapsible) ── */
+  .add-event-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .add-event-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .add-event-toggle:hover { background: var(--bg); }
+  .add-event-toggle-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--black);
+  }
+  .toggle-icon {
+    font-size: 1.1rem;
+    color: var(--muted);
+    transition: transform 0.2s;
+    font-weight: 300;
+  }
+  .toggle-icon.open { transform: rotate(45deg); }
+
+  .add-event-body {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .add-event-body.visible { display: block; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+  }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-col { display: flex; flex-direction: column; gap: 8px; }
+  .form-full { grid-column: 1 / -1; }
+
+  .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--black);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .form-input:focus { border-color: var(--green); background: #fff; }
+
+  .dt-pair { display: flex; gap: 7px; }
+  .dt-pair .form-input { flex: 1; }
+
+  textarea.form-input { resize: vertical; min-height: 62px; }
+
+  .type-tabs { display: flex; gap: 6px; }
+  .type-tab-input { display: none; }
+  .type-tab-label {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-md);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  #tab-official:checked + .type-tab-label {
+    background: var(--green); color: #fff; border-color: var(--green);
+  }
+  #tab-personal:checked + .type-tab-label {
+    background: var(--blue); color: #fff; border-color: var(--blue);
+  }
+
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.83rem;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+    margin-top: 2px;
+  }
+  .check-row input { cursor: pointer; accent-color: var(--green); width: 15px; height: 15px; }
+
+  .submit-btn {
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background 0.18s;
+    margin-top: 4px;
+  }
+  .submit-btn:hover { background: var(--green); }
+
+  .admin-info {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    padding: 9px 14px;
+    font-size: 0.8rem;
+    color: var(--green);
+    font-weight: 500;
+    margin-top: 14px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    display: none;
+  }
+  .admin-info.visible { display: block; }
+
+  /* ── EVENT DETAIL PANEL (shown below calendar on click) ── */
+  .event-detail-panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    display: none;
+  }
+  .event-detail-panel.visible { display: block; }
+  .detail-date { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .detail-list { list-style: none; }
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .detail-item:last-child { border-bottom: none; }
+  .detail-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .detail-tag.official  { background: var(--green-light); color: var(--green); }
+  .detail-tag.personal  { background: var(--blue-light);  color: var(--blue);  }
+  .detail-info { flex: 1; min-width: 0; }
+  .detail-name { font-weight: 600; }
+  .detail-time { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .detail-desc { font-size: 0.75rem; color: var(--muted); margin-top: 1px; }
+  .detail-del  {
+    background: none; border: none; cursor: pointer;
+    color: rgba(0,0,0,0.2); font-size: 0.85rem; padding: 0 2px; flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .detail-del:hover { color: #c00; }
+  .no-events-msg { font-size: 0.85rem; color: var(--muted); font-style: italic; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+  .legend-dot.official  { background: var(--green); }
+  .legend-dot.personal  { background: var(--blue);  }
+
+  /* ── MODAL ── */
+  .modal-wrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-wrap.open { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 28px 30px;
+    max-width: 400px;
+    width: 92%;
+    border: 1px solid var(--border);
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 6px; }
+  .modal-desc  { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
+  .modal-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 5px; margin-top: 12px; }
+  .modal-label:first-of-type { margin-top: 0; }
+  .modal-select, .modal-date {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--black);
+    background: var(--surface);
+    outline: none;
+    margin-bottom: 0;
+  }
+  .modal-select:focus, .modal-date:focus { border-color: var(--blue); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+  .modal-cancel {
+    background: var(--bg); border: 1px solid var(--border-md);
+    padding: 8px 18px; border-radius: var(--radius);
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem;
+  }
+  .modal-save {
+    background: var(--blue); color: #fff; border: none;
+    padding: 8px 20px; border-radius: var(--radius);
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 500;
+  }
+  .modal-save:hover { background: #004a68; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-title">Calendario de Estudos</div>
+    <div class="header-sub">Concurso Publico</div>
+  </div>
+  <div id="admin-area">
+    <button class="admin-btn" onclick="toggleAdmin()">Modo Admin</button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- 1. CONTAGENS REGRESSIVAS -->
+  <div>
+    <div class="section-label">Contagens Regressivas</div>
+    <div class="countdowns-row" id="countdowns-row"></div>
+  </div>
+
+  <!-- 2. REGUA DE PROGRESSO -->
+  <div class="progress-bar-section" id="progress-section">
+    <div class="prog-top">
+      <div>
+        <div class="prog-title" id="prog-name">—</div>
+        <div class="prog-subtitle" id="prog-meta">—</div>
+      </div>
+      <button class="prog-alter-btn" id="prog-admin-btn" onclick="openProgressModal()" style="display:none;">Alterar</button>
+    </div>
+    <div class="prog-stats">
+      <div class="prog-stat"><div class="prog-num" id="prog-days">—</div><div class="prog-lbl">Dias restantes</div></div>
+      <div class="prog-stat"><div class="prog-num" id="prog-elapsed">—</div><div class="prog-lbl">Dias passados</div></div>
+      <div class="prog-stat"><div class="prog-num" id="prog-total">—</div><div class="prog-lbl">Total de dias</div></div>
+      <div class="prog-stat"><div class="prog-num" id="prog-pct-num">—%</div><div class="prog-lbl">Concluido</div></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-ends"><span id="prog-start-lbl">Inicio</span><span id="prog-end-lbl">Fim</span></div>
+  </div>
+
+  <!-- 3. CALENDARIO -->
+  <div>
+    <div class="calendar-card">
+      <div class="cal-top">
+        <div class="cal-month-label" id="cal-month-label"></div>
+        <div class="cal-nav-group">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+          <button class="cal-today-btn" onclick="goToToday()">Hoje</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot official"></span> Evento oficial</div>
+        <div class="legend-item"><span class="legend-dot personal"></span> Evento pessoal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETALHE DO DIA SELECIONADO -->
+  <div class="event-detail-panel" id="detail-panel">
+    <div class="detail-date" id="detail-date">—</div>
+    <ul class="detail-list" id="detail-list"></ul>
+  </div>
+
+  <!-- 4. ADICIONAR EVENTO (colapsavel) -->
+  <div class="add-event-section">
+    <div class="add-event-toggle" onclick="toggleAddForm()" id="add-toggle">
+      <span class="add-event-toggle-label">+ Adicionar novo evento</span>
+      <span class="toggle-icon" id="toggle-icon">+</span>
+    </div>
+    <div class="add-event-body" id="add-body">
+      <div class="admin-info" id="admin-info">Modo admin ativo: voce pode adicionar eventos oficiais visíveis para todos.</div>
+      <div class="form-grid">
+
+        <div class="form-col form-full">
+          <div class="form-label">Nome do evento</div>
+          <input type="text" class="form-input" id="ev-name" placeholder="Ex: Revisao de portugues" maxlength="60">
+        </div>
+
+        <div class="form-col">
+          <div class="form-label">Inicio</div>
+          <div class="dt-pair">
+            <input type="date" class="form-input" id="ev-start-date">
+            <input type="time" class="form-input" id="ev-start-time">
+          </div>
+        </div>
+
+        <div class="form-col">
+          <div class="form-label">Fim</div>
+          <div class="dt-pair">
+            <input type="date" class="form-input" id="ev-end-date">
+            <input type="time" class="form-input" id="ev-end-time">
+          </div>
+        </div>
+
+        <div class="form-col form-full">
+          <div class="form-label">Descricao (opcional)</div>
+          <textarea class="form-input" id="ev-desc" placeholder="Observacoes sobre o evento"></textarea>
+        </div>
+
+        <div class="form-col form-full" id="type-selector" style="display:none;">
+          <div class="form-label">Tipo de evento</div>
+          <div class="type-tabs">
+            <input type="radio" name="ev-type" id="tab-personal" class="type-tab-input" value="personal" checked>
+            <label for="tab-personal" class="type-tab-label">Pessoal</label>
+            <input type="radio" name="ev-type" id="tab-official" class="type-tab-input" value="official">
+            <label for="tab-official" class="type-tab-label">Oficial</label>
+          </div>
+        </div>
+
+        <div class="form-col form-full">
+          <label class="check-row">
+            <input type="checkbox" id="ev-countdown">
+            Exibir contagem regressiva para este evento
+          </label>
+        </div>
+
+        <div class="form-col form-full">
+          <button class="submit-btn" onclick="addEvent()">Salvar evento</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: REGUA DE PROGRESSO -->
+<div class="modal-wrap" id="prog-modal">
+  <div class="modal-box">
+    <div class="modal-title">Regua de Progresso</div>
+    <div class="modal-desc">Escolha qual contagem regressiva exibira a barra de progresso em porcentagem para todos os usuarios.</div>
+    <label class="modal-label">Evento</label>
+    <select class="modal-select" id="modal-ev-select"></select>
+    <label class="modal-label">Data de inicio do periodo</label>
+    <input type="date" class="modal-date" id="modal-start">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeProgressModal()">Cancelar</button>
+      <button class="modal-save"   onclick="saveProgressSettings()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+const MONTHS = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+let curYear, curMonth, selDate;
+let isAdmin = false;
+
+let pubEvs  = JSON.parse(localStorage.getItem('pubEvs')  || '[]');
+let persEvs = JSON.parse(localStorage.getItem('persEvs') || '[]');
+let progCfg = JSON.parse(localStorage.getItem('progCfg') || 'null');
+
+const savePub  = () => localStorage.setItem('pubEvs',  JSON.stringify(pubEvs));
+const savePers = () => localStorage.setItem('persEvs', JSON.stringify(persEvs));
+const saveProg = () => localStorage.setItem('progCfg', JSON.stringify(progCfg));
+
+if (pubEvs.length === 0) {
+  const y = new Date().getFullYear();
+  pubEvs = [
+    { id:'p1', startDate:`${y}-05-10`, endDate:`${y}-05-10`, startTime:'08:00', endTime:'17:00', name:'Inscricoes Abertas',  desc:'Prazo final para inscricao', countdown:true  },
+    { id:'p2', startDate:`${y}-07-20`, endDate:`${y}-07-20`, startTime:'08:00', endTime:'12:00', name:'Prova Objetiva',      desc:'Prova de conhecimentos gerais', countdown:true  },
+    { id:'p3', startDate:`${y}-09-05`, endDate:`${y}-09-05`, startTime:'',      endTime:'',      name:'Gabarito Preliminar',desc:'Divulgacao do gabarito', countdown:false },
+    { id:'p4', startDate:`${y}-11-15`, endDate:`${y}-11-15`, startTime:'',      endTime:'',      name:'Resultado Final',    desc:'Homologacao do resultado', countdown:true  },
+  ];
+  savePub();
+}
+
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtDisplay(ds) {
+  if (!ds) return '';
+  const [y,m,d] = ds.split('-');
+  return `${parseInt(d)} de ${MONTHS[parseInt(m)-1]} de ${y}`;
+}
+
+function eventsForDate(ds) {
+  const pub  = pubEvs.filter(e  => ds >= e.startDate && ds <= (e.endDate||e.startDate));
+  const pers = persEvs.filter(e => ds >= e.startDate && ds <= (e.endDate||e.startDate));
+  return { pub, pers };
+}
+
+function allCountdownEvs() {
+  return [
+    ...pubEvs.filter(e  => e.countdown).map(e=>({...e,type:'official'})),
+    ...persEvs.filter(e => e.countdown).map(e=>({...e,type:'personal'}))
+  ].sort((a,b)=>a.startDate.localeCompare(b.startDate));
+}
+
+function toggleAdmin() {
+  isAdmin = !isAdmin;
+  const area = document.getElementById('admin-area');
+  const info = document.getElementById('admin-info');
+  const typeSelector = document.getElementById('type-selector');
+  const progBtn = document.getElementById('prog-admin-btn');
+
+  if (isAdmin) {
+    area.innerHTML = `<span class="admin-badge">Admin Ativo</span><button class="admin-exit" onclick="toggleAdmin()">Sair</button>`;
+    info.classList.add('visible');
+    typeSelector.style.display = 'block';
+    document.getElementById('tab-official').checked = true;
+    if (progBtn) progBtn.style.display = 'block';
+  } else {
+    area.innerHTML = `<button class="admin-btn" onclick="toggleAdmin()">Modo Admin</button>`;
+    info.classList.remove('visible');
+    typeSelector.style.display = 'none';
+    document.getElementById('tab-personal').checked = true;
+    if (progBtn) progBtn.style.display = 'none';
+  }
+  renderCountdowns();
+  renderProgressBar();
+  if (selDate) renderDetailPanel();
+}
+
+function init() {
+  const now = new Date();
+  curYear  = now.getFullYear();
+  curMonth = now.getMonth();
+  selDate  = fmtDate(now);
+  document.getElementById('ev-start-date').value = selDate;
+  document.getElementById('ev-end-date').value   = selDate;
+  renderCalendar();
+  renderCountdowns();
+  renderProgressBar();
+  renderDetailPanel();
+}
+
+function changeMonth(dir) {
+  curMonth += dir;
+  if (curMonth > 11) { curMonth=0; curYear++; }
+  if (curMonth < 0)  { curMonth=11; curYear--; }
+  renderCalendar();
+}
+
+function goToToday() {
+  const now = new Date();
+  curYear=now.getFullYear(); curMonth=now.getMonth(); selDate=fmtDate(now);
+  renderCalendar(); renderDetailPanel();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = `${MONTHS[curMonth]} ${curYear}`;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className='cal-dayname'; el.textContent=d; grid.appendChild(el);
+  });
+
+  const firstDay    = new Date(curYear,curMonth,1).getDay();
+  const daysInMonth = new Date(curYear,curMonth+1,0).getDate();
+  const daysInPrev  = new Date(curYear,curMonth,0).getDate();
+  const today       = fmtDate(new Date());
+
+  for (let i=firstDay-1;i>=0;i--) makeCell(grid, daysInPrev-i, true, null, false, false);
+  for (let d=1;d<=daysInMonth;d++) {
+    const ds = `${curYear}-${String(curMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    makeCell(grid, d, false, ds, ds===today, ds===selDate);
+  }
+  const total = firstDay+daysInMonth;
+  const rem   = total%7===0?0:7-(total%7);
+  for (let d=1;d<=rem;d++) makeCell(grid, d, true, null, false, false);
+}
+
+function makeCell(grid, d, other, ds, isToday, isSel) {
+  const el = document.createElement('div');
+  el.className = 'cal-cell' + (other?' other-month':'') + (isToday?' today':'') + (isSel?' selected':'');
+
+  const num = document.createElement('div');
+  num.className='cell-num'; num.textContent=d; el.appendChild(num);
+
+  if (!other && ds) {
+    const {pub,pers} = eventsForDate(ds);
+    const chips = document.createElement('div');
+    chips.className='cell-events';
+    const all = [...pub.map(e=>({...e,type:'official'})),...pers.map(e=>({...e,type:'personal'}))];
+    all.slice(0,3).forEach(ev => {
+      const chip = document.createElement('div');
+      chip.className=`cell-event-chip ${ev.type}`;
+      chip.textContent=ev.name;
+      chips.appendChild(chip);
+    });
+    if (all.length>3) {
+      const more=document.createElement('div');
+      more.style.cssText='font-size:0.62rem;color:var(--muted);padding:0 4px;';
+      more.textContent=`+${all.length-3} mais`;
+      chips.appendChild(more);
+    }
+    el.appendChild(chips);
+    el.onclick=()=>{
+      selDate=ds;
+      document.getElementById('ev-start-date').value=ds;
+      document.getElementById('ev-end-date').value=ds;
+      renderCalendar(); renderDetailPanel();
+    };
+  }
+  grid.appendChild(el);
+}
+
+function renderDetailPanel() {
+  const panel = document.getElementById('detail-panel');
+  const dateEl= document.getElementById('detail-date');
+  const list  = document.getElementById('detail-list');
+
+  if (!selDate) { panel.classList.remove('visible'); return; }
+
+  const [y,m,d]=selDate.split('-');
+  dateEl.textContent=`${parseInt(d)} de ${MONTHS[parseInt(m)-1]} de ${y}`;
+
+  const {pub,pers}=eventsForDate(selDate);
+  const all=[...pub.map(e=>({...e,type:'official'})),...pers.map(e=>({...e,type:'personal'}))];
+
+  list.innerHTML='';
+  if (all.length===0) {
+    list.innerHTML='<li class="no-events-msg">Nenhum evento neste dia.</li>';
+  } else {
+    all.forEach(ev=>{
+      const li=document.createElement('li');
+      li.className='detail-item';
+      let timeStr='';
+      const multi=ev.endDate&&ev.endDate!==ev.startDate;
+      if (multi) {
+        timeStr=`${fmtDisplay(ev.startDate)}${ev.startTime?' as '+ev.startTime:''} ate ${fmtDisplay(ev.endDate)}${ev.endTime?' as '+ev.endTime:''}`;
+      } else if (ev.startTime||ev.endTime) {
+        timeStr=[ev.startTime,ev.endTime].filter(Boolean).join(' - ');
+      }
+      const canDel=ev.type==='personal'||isAdmin;
+      li.innerHTML=`
+        <span class="detail-tag ${ev.type}">${ev.type==='official'?'Oficial':'Pessoal'}</span>
+        <div class="detail-info">
+          <div class="detail-name">${ev.name}</div>
+          ${timeStr?`<div class="detail-time">${timeStr}</div>`:''}
+          ${ev.desc?`<div class="detail-desc">${ev.desc}</div>`:''}
+        </div>
+        ${canDel?`<button class="detail-del" onclick="deleteEvent('${ev.id}','${ev.type}')">&#x2715;</button>`:''}
+      `;
+      list.appendChild(li);
+    });
+  }
+  panel.classList.add('visible');
+}
+
+function toggleAddForm() {
+  const body=document.getElementById('add-body');
+  const icon=document.getElementById('toggle-icon');
+  const open=body.classList.toggle('visible');
+  icon.classList.toggle('open',open);
+}
+
+function addEvent() {
+  const name=document.getElementById('ev-name').value.trim();
+  if (!name) return alert('Preencha o nome do evento.');
+  const startDate=document.getElementById('ev-start-date').value;
+  const endDate  =document.getElementById('ev-end-date').value||startDate;
+  const startTime=document.getElementById('ev-start-time').value;
+  const endTime  =document.getElementById('ev-end-time').value;
+  const desc     =document.getElementById('ev-desc').value.trim();
+  const countdown=document.getElementById('ev-countdown').checked;
+  const type     =document.querySelector('input[name="ev-type"]:checked').value;
+
+  if (!startDate) return alert('Informe a data de inicio.');
+  if (endDate<startDate) return alert('A data de fim nao pode ser anterior ao inicio.');
+
+  const ev={id:Date.now().toString(),startDate,endDate,startTime,endTime,name,desc,countdown};
+  if (type==='official') { pubEvs.push(ev); savePub(); }
+  else                   { persEvs.push(ev); savePers(); }
+
+  document.getElementById('ev-name').value='';
+  document.getElementById('ev-start-time').value='';
+  document.getElementById('ev-end-time').value='';
+  document.getElementById('ev-end-date').value=selDate;
+  document.getElementById('ev-desc').value='';
+  document.getElementById('ev-countdown').checked=false;
+
+  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel();
+}
+
+function deleteEvent(id,type) {
+  if (type==='official') {
+    if (!isAdmin) return alert('Apenas o admin pode remover eventos oficiais.');
+    pubEvs=pubEvs.filter(e=>e.id!==id); savePub();
+  } else {
+    persEvs=persEvs.filter(e=>e.id!==id); savePers();
+  }
+  if (progCfg&&progCfg.eventId===id) { progCfg=null; saveProg(); }
+  renderCalendar(); renderCountdowns(); renderProgressBar(); renderDetailPanel();
+}
+
+function renderCountdowns() {
+  const row=document.getElementById('countdowns-row');
+  row.innerHTML='';
+  const today=new Date(); today.setHours(0,0,0,0);
+  const evts=allCountdownEvs();
+  if (evts.length===0) {
+    row.innerHTML='<div style="font-size:0.82rem;color:var(--muted);font-style:italic;">Nenhuma contagem regressiva definida. Adicione um evento e marque a opcao correspondente.</div>';
+    return;
+  }
+  const featId=progCfg?progCfg.eventId:null;
+  evts.forEach(ev=>{
+    const evDate=new Date(ev.startDate+'T00:00:00');
+    const diff=Math.ceil((evDate-today)/86400000);
+    const label=diff>0?`${diff} dia${diff!==1?'s':''}`
+               :diff===0?'HOJE'
+               :`${Math.abs(diff)} dia${Math.abs(diff)!==1?'s':''} atras`;
+    const isFeat=ev.id===featId;
+    const card=document.createElement('div');
+    card.className=`countdown-card ${ev.type==='official'?'official':''} ${isFeat?'featured-card':''}`;
+
+    const acts=document.createElement('div');
+    acts.className='cd-actions';
+    if (isAdmin) {
+      const sb=document.createElement('button');
+      sb.className='cd-btn'+(isFeat?' active':'');
+      sb.title='Definir regua de progresso';
+      sb.textContent=isFeat?'★':'☆';
+      sb.onclick=e=>{e.stopPropagation();openProgressModalForEv(ev.id);};
+      acts.appendChild(sb);
+    }
+    if (ev.type==='personal'||isAdmin) {
+      const db=document.createElement('button');
+      db.className='cd-btn'; db.title='Remover'; db.textContent='×';
+      db.onclick=e=>{e.stopPropagation();deleteEvent(ev.id,ev.type);};
+      acts.appendChild(db);
+    }
+
+    card.innerHTML=`
+      <div class="cd-type">
+        ${ev.type==='official'?'Oficial':'Pessoal'}
+        ${isFeat?'<span class="cd-featured-pill">Progresso</span>':''}
+      </div>
+      <div class="cd-days">${label}</div>
+      <div class="cd-name">${ev.name}</div>
+      <div class="cd-date">${fmtDisplay(ev.startDate)}</div>
+    `;
+    card.appendChild(acts);
+    row.appendChild(card);
+  });
+}
+
+function renderProgressBar() {
+  const sec=document.getElementById('progress-section');
+  if (!progCfg){sec.classList.remove('visible');return;}
+  const {eventId,startDate}=progCfg;
+  const ev=[...pubEvs,...persEvs].find(e=>e.id===eventId);
+  if (!ev){sec.classList.remove('visible');return;}
+  sec.classList.add('visible');
+
+  const today=new Date();today.setHours(0,0,0,0);
+  const start=new Date(startDate+'T00:00:00');
+  const end  =new Date(ev.startDate+'T00:00:00');
+
+  const total  =Math.max(1,Math.ceil((end-start)/86400000));
+  const elapsed=Math.max(0,Math.ceil((today-start)/86400000));
+  const remain =Math.max(0,Math.ceil((end-today)/86400000));
+  const pct    =Math.min(100,Math.round((elapsed/total)*100));
+
+  document.getElementById('prog-name').textContent   =ev.name;
+  document.getElementById('prog-meta').textContent   =`${fmtDisplay(startDate)} — ${fmtDisplay(ev.startDate)}`;
+  document.getElementById('prog-days').textContent   =remain;
+  document.getElementById('prog-elapsed').textContent=elapsed;
+  document.getElementById('prog-total').textContent  =total;
+  document.getElementById('prog-pct-num').textContent=`${pct}%`;
+  document.getElementById('prog-fill').style.width   =`${pct}%`;
+  document.getElementById('prog-start-lbl').textContent=fmtDisplay(startDate);
+  document.getElementById('prog-end-lbl').textContent  =fmtDisplay(ev.startDate);
+  document.getElementById('prog-admin-btn').style.display=isAdmin?'block':'none';
+}
+
+function openProgressModal() { openProgressModalForEv(progCfg?progCfg.eventId:null); }
+function openProgressModalForEv(preId) {
+  const sel=document.getElementById('modal-ev-select');
+  sel.innerHTML='';
+  allCountdownEvs().forEach(ev=>{
+    const o=document.createElement('option');
+    o.value=ev.id;
+    o.textContent=`[${ev.type==='official'?'Oficial':'Pessoal'}] ${ev.name} — ${fmtDisplay(ev.startDate)}`;
+    if (ev.id===preId) o.selected=true;
+    sel.appendChild(o);
+  });
+  document.getElementById('modal-start').value=progCfg?progCfg.startDate:fmtDate(new Date());
+  document.getElementById('prog-modal').classList.add('open');
+}
+function closeProgressModal() { document.getElementById('prog-modal').classList.remove('open'); }
+function saveProgressSettings() {
+  const eventId  =document.getElementById('modal-ev-select').value;
+  const startDate=document.getElementById('modal-start').value;
+  if (!eventId||!startDate) return alert('Selecione o evento e a data de inicio.');
+  progCfg={eventId,startDate}; saveProg();
+  closeProgressModal(); renderCountdowns(); renderProgressBar();
+}
+
+init();
+</script>
+</body>
+</html>
