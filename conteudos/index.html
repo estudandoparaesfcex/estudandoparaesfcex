@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão de Zero Um — Lista de Conteúdos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eeeb;--black:#000;--green:#215732;--blue:#00587c;
+  --white:#fff;--surface:#f4f7f5;--border:rgba(0,0,0,0.10);
+  --border-md:rgba(0,0,0,0.18);--muted:rgba(0,0,0,0.42);
+  --green-light:#d4e8da;--blue-light:#cde7f0;--gold:#c8a96e;
+  --alert:#a71c1c;--alert-light:#f5d5d5;
+  --r:6px;--rl:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--black);min-height:100vh;font-size:15px;line-height:1.5;}
+
+/* ── MENU LATERAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:300;}
+.overlay.open{display:block;}
+.side-menu{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--green);color:var(--white);z-index:400;transform:translateX(-100%);transition:transform 0.25s ease;display:flex;flex-direction:column;}
+.side-menu.open{transform:translateX(0);}
+.side-menu-header{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.12);display:flex;align-items:flex-start;justify-content:space-between;}
+.side-menu-brand{display:flex;flex-direction:column;gap:2px;}
+.side-menu-name{font-family:'DM Serif Display',serif;font-size:1.05rem;color:#fff;}
+.side-menu-slogan{font-size:0.7rem;color:rgba(255,255,255,0.5);letter-spacing:0.04em;}
+.side-menu-close{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.1rem;padding:2px 4px;transition:color 0.15s;}
+.side-menu-close:hover{color:#fff;}
+.side-menu-nav{flex:1;padding:12px 0;overflow-y:auto;}
+.side-nav-label{font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:14px 20px 6px;}
+.side-nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;cursor:pointer;transition:background 0.15s;color:rgba(255,255,255,0.78);font-size:0.88rem;font-weight:500;text-decoration:none;}
+.side-nav-item:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.side-nav-item.active{background:rgba(255,255,255,0.13);color:#fff;}
+.side-nav-item.disabled{opacity:0.38;cursor:default;pointer-events:none;}
+.side-nav-icon{width:17px;height:17px;flex-shrink:0;}
+.side-nav-soon{font-size:0.62rem;font-weight:600;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);padding:1px 6px;border-radius:3px;margin-left:auto;}
+.side-menu-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.71rem;color:rgba(255,255,255,0.28);}
+
+/* ── HEADER ── */
+header{background:var(--green);color:var(--white);padding:0 20px;height:58px;display:flex;align-items:center;gap:12px;}
+.h-burger{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.8);display:flex;flex-direction:column;gap:5px;padding:4px;flex-shrink:0;}
+.h-burger span{display:block;width:20px;height:2px;background:currentColor;border-radius:2px;}
+.h-brand{display:flex;flex-direction:column;gap:1px;flex:1;}
+.h-name{font-family:'DM Serif Display',serif;font-size:1rem;color:#fff;line-height:1.2;}
+.h-slogan{font-size:0.67rem;color:rgba(255,255,255,0.48);letter-spacing:0.04em;}
+.h-logo{font-size:1.4rem;color:var(--gold);letter-spacing:-3px;user-select:none;margin:0 6px;}
+.h-right{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.h-icon-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.72);padding:7px;border-radius:var(--r);transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+.h-icon-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.h-profile-wrap{position:relative;}
+.profile-drop{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--white);border:1px solid var(--border-md);border-radius:var(--rl);box-shadow:0 6px 20px rgba(0,0,0,0.15);z-index:200;min-width:180px;overflow:hidden;}
+.profile-drop.open{display:block;}
+.profile-drop-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+.profile-drop-name{font-weight:600;font-size:0.87rem;}
+.profile-drop-role{font-size:0.72rem;color:var(--muted);margin-top:1px;}
+.profile-drop-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:0.85rem;cursor:pointer;transition:background 0.12s;}
+.profile-drop-item:hover{background:var(--bg);}
+.profile-drop-item svg{color:var(--muted);flex-shrink:0;}
+.profile-drop-sep{height:1px;background:var(--border);margin:2px 0;}
+.profile-drop-item.danger{color:var(--alert);}
+
+/* ── SAUDAÇÃO ── */
+.greeting-bar{max-width:1200px;margin:0 auto;padding:18px 24px 0;}
+.greeting-text{font-family:'DM Serif Display',serif;font-size:1.15rem;}
+.greeting-sub{font-size:0.82rem;color:var(--muted);margin-top:2px;}
+
+/* ── PAGE ── */
+.page{max-width:1200px;margin:0 auto;padding:16px 24px 60px;display:flex;flex-direction:column;gap:20px;}
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-title{font-family:'DM Serif Display',serif;font-size:1.65rem;font-weight:400;}
+
+/* ── ABAS: PESSOAL / ADMIN ── */
+.tab-row{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:4px;}
+.tab-btn{background:none;border:none;padding:9px 20px;font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+.tab-btn:hover{color:var(--black);}
+.admin-only-note{font-size:0.76rem;color:var(--muted);font-style:italic;padding:6px 2px;}
+
+/* ── LAYOUT DUAS COLUNAS ── */
+.content-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start;}
+@media(max-width:700px){.content-layout{grid-template-columns:1fr;}}
+
+/* ── LISTA DE DISCIPLINAS ── */
+.disc-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
+.disc-panel-header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.disc-panel-title{font-size:0.82rem;font-weight:600;color:var(--black);}
+.add-disc-btn{background:var(--green);color:#fff;border:none;padding:5px 12px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;transition:background 0.15s;}
+.add-disc-btn:hover{background:#1a4428;}
+.disc-list{list-style:none;max-height:520px;overflow-y:auto;}
+.disc-item{display:flex;align-items:center;gap:8px;padding:11px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;font-size:0.87rem;}
+.disc-item:last-child{border-bottom:none;}
+.disc-item:hover{background:var(--bg);}
+.disc-item.active{background:var(--green-light);}
+.disc-item.official-disc{font-weight:500;}
+.disc-item-name{flex:1;min-width:0;}
+.disc-badge{font-size:0.62rem;font-weight:600;padding:1px 6px;border-radius:3px;flex-shrink:0;}
+.disc-badge.official{background:var(--green-light);color:var(--green);}
+.disc-badge.hidden-badge{background:var(--bg);color:var(--muted);}
+.disc-acts{display:flex;gap:2px;flex-shrink:0;}
+.disc-btn{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:0.78rem;padding:2px 4px;border-radius:3px;transition:color 0.15s,background 0.15s;}
+.disc-btn:hover{background:var(--bg);}
+.disc-btn.edit:hover{color:var(--blue);}
+.disc-btn.del:hover{color:var(--alert);}
+.disc-btn.hide:hover{color:var(--muted);}
+.disc-empty{padding:16px 18px;font-size:0.84rem;color:var(--muted);font-style:italic;}
+
+/* ── PAINEL DE ASSUNTOS ── */
+.subj-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
+.subj-panel-header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.subj-panel-disc{font-family:'DM Serif Display',serif;font-size:1rem;font-weight:400;}
+.subj-panel-disc span{font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--muted);margin-left:8px;}
+.add-subj-btn{background:var(--blue);color:#fff;border:none;padding:5px 12px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;transition:background 0.15s;}
+.add-subj-btn:hover{background:#004a68;}
+.subj-list{list-style:none;}
+.subj-item{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);font-size:0.87rem;transition:background 0.12s;}
+.subj-item:last-child{border-bottom:none;}
+.subj-item:hover{background:var(--bg);}
+.subj-item-name{flex:1;}
+.subj-badge{font-size:0.62rem;font-weight:600;padding:1px 6px;border-radius:3px;}
+.subj-badge.official{background:var(--green-light);color:var(--green);}
+.subj-badge.hidden-badge{background:var(--bg);color:var(--muted);}
+.subj-acts{display:flex;gap:2px;}
+.subj-btn{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:0.78rem;padding:2px 4px;border-radius:3px;transition:color 0.15s,background 0.15s;}
+.subj-btn:hover{background:var(--bg);}
+.subj-btn.edit:hover{color:var(--blue);}
+.subj-btn.del:hover{color:var(--alert);}
+.subj-empty{padding:16px 18px;font-size:0.84rem;color:var(--muted);font-style:italic;}
+.no-disc-selected{padding:32px 18px;font-size:0.85rem;color:var(--muted);font-style:italic;text-align:center;}
+
+/* ── MODAL ── */
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;}
+.modal-wrap.open{display:flex;}
+.modal-box{background:var(--white);border-radius:var(--rl);padding:22px 24px;max-width:380px;width:94%;border:1px solid var(--border);}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1rem;margin-bottom:14px;}
+.m-lbl{font-size:0.67rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;margin-top:12px;}
+.m-lbl:first-of-type{margin-top:0;}
+.m-input{width:100%;padding:7px 10px;border:1px solid var(--border-md);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:0.87rem;background:var(--surface);outline:none;}
+.m-input:focus{border-color:var(--green);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.m-cancel{background:var(--bg);border:1px solid var(--border-md);padding:7px 14px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.83rem;}
+.m-save{background:var(--green);color:#fff;border:none;padding:7px 16px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;}
+.m-save:hover{background:#1a4428;}
+.m-save.blue{background:var(--blue);}
+.m-save.blue:hover{background:#004a68;}
+
+/* Aviso de seção vazia */
+.empty-note{background:var(--surface);border:1px dashed var(--border-md);border-radius:var(--r);padding:14px 18px;font-size:0.82rem;color:var(--muted);margin:16px 18px;}
+</style>
+</head>
+<body>
+
+<!-- MENU LATERAL -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<nav class="side-menu" id="side-menu">
+  <div class="side-menu-header">
+    <div class="side-menu-brand">
+      <div class="side-menu-name">Missão de Zero Um</div>
+      <div class="side-menu-slogan">Estudando para a EsFCEx</div>
+    </div>
+    <button class="side-menu-close" onclick="closeMenu()">&#x2715;</button>
+  </div>
+  <div class="side-menu-nav">
+    <div class="side-nav-label">Principal</div>
+    <a class="side-nav-item" href="../calendario-estudos.html">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Calendário
+    </a>
+    <div class="side-nav-label">Ferramentas de Estudo</div>
+    <a class="side-nav-item" href="../cronometro/index.html">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Relógio
+    </a>
+    <a class="side-nav-item active">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Lista de Conteúdos
+    </a>
+    <a class="side-nav-item disabled">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Leitura <span class="side-nav-soon">Em breve</span>
+    </a>
+    <a class="side-nav-item disabled">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Flashcards <span class="side-nav-soon">Em breve</span>
+    </a>
+    <a class="side-nav-item disabled">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1 2-2h11"/></svg>
+      Simulados <span class="side-nav-soon">Em breve</span>
+    </a>
+    <div class="side-nav-label">Acompanhamento</div>
+    <a class="side-nav-item disabled">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Desempenho <span class="side-nav-soon">Em breve</span>
+    </a>
+    <a class="side-nav-item disabled">
+      <svg class="side-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Histórico de Estudo <span class="side-nav-soon">Em breve</span>
+    </a>
+  </div>
+  <div class="side-menu-footer">Versão provisória — mais páginas em breve</div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <button class="h-burger" onclick="openMenu()"><span></span><span></span><span></span></button>
+  <div class="h-brand">
+    <div class="h-name">Missão de Zero Um</div>
+    <div class="h-slogan">Estudando para a EsFCEx</div>
+  </div>
+  <div class="h-logo">&#9733;&#9733;</div>
+  <div class="h-right">
+    <div class="h-profile-wrap" id="profile-wrap">
+      <button class="h-icon-btn" onclick="toggleProfile()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <div class="profile-drop" id="profile-drop">
+        <div class="profile-drop-header">
+          <div class="profile-drop-name" id="profile-name">Usuário</div>
+          <div class="profile-drop-role">Candidato — EsFCEx</div>
+        </div>
+        <div class="profile-drop-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil
+        </div>
+        <div class="profile-drop-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Configurações
+        </div>
+        <div class="profile-drop-sep"></div>
+        <div class="profile-drop-item" id="admin-menu-item" onclick="toggleAdminFromMenu()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span id="admin-menu-lbl">Entrar como Admin</span>
+        </div>
+        <div class="profile-drop-sep"></div>
+        <div class="profile-drop-item danger">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sair
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SAUDAÇÃO -->
+<div class="greeting-bar">
+  <div class="greeting-text" id="greeting-text">Olá, bons estudos!</div>
+  <div class="greeting-sub" id="greeting-sub"></div>
+</div>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title">Lista de Conteúdos</div>
+    <div id="admin-badge-area"></div>
+  </div>
+
+  <!-- ABAS -->
+  <div class="tab-row">
+    <button class="tab-btn active" id="tab-personal" onclick="setTab('personal')">Meus conteúdos</button>
+    <button class="tab-btn" id="tab-official" onclick="setTab('official')">Conteúdos oficiais</button>
+  </div>
+  <div id="tab-note"></div>
+
+  <!-- LAYOUT CONTEÚDO -->
+  <div class="content-layout" id="content-layout">
+
+    <!-- LISTA DE DISCIPLINAS -->
+    <div class="disc-panel">
+      <div class="disc-panel-header">
+        <div class="disc-panel-title">Disciplinas</div>
+        <button class="add-disc-btn" id="add-disc-btn" onclick="openDiscModal()">+ Adicionar</button>
+      </div>
+      <ul class="disc-list" id="disc-list"></ul>
+    </div>
+
+    <!-- ASSUNTOS DA DISCIPLINA SELECIONADA -->
+    <div class="subj-panel" id="subj-panel">
+      <div class="subj-panel-header">
+        <div class="subj-panel-disc" id="subj-panel-title">Selecione uma disciplina<span>para ver os assuntos</span></div>
+        <button class="add-subj-btn" id="add-subj-btn" onclick="openSubjModal()" style="display:none;">+ Adicionar assunto</button>
+      </div>
+      <div id="subj-content"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL DISCIPLINA -->
+<div class="modal-wrap" id="disc-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="disc-modal-title">Nova disciplina</div>
+    <label class="m-lbl">Nome da disciplina</label>
+    <input class="m-input" id="disc-input" type="text" placeholder="Ex.: Português, Direito…" maxlength="60">
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeDiscModal()">Cancelar</button>
+      <button class="m-save"   id="disc-save-btn" onclick="saveDisc()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ASSUNTO -->
+<div class="modal-wrap" id="subj-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="subj-modal-title">Novo assunto</div>
+    <label class="m-lbl" id="subj-modal-disc-lbl">Disciplina</label>
+    <label class="m-lbl">Nome do assunto</label>
+    <input class="m-input" id="subj-input" type="text" placeholder="Ex.: Gramática, Funções…" maxlength="80">
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeSubjModal()">Cancelar</button>
+      <button class="m-save blue" id="subj-save-btn" onclick="saveSubj()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MONTHS  = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const DAYS_PT = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+
+// ── DADOS ──
+// Estrutura: { id, name, official, hidden }
+let personalDiscs  = JSON.parse(localStorage.getItem('personalDiscs')  || '[]');
+let officialDiscs  = JSON.parse(localStorage.getItem('officialDiscs')  || '[]');
+// Assuntos: { id, discId, name, official, hidden }
+let personalSubjs  = JSON.parse(localStorage.getItem('personalSubjs')  || '[]');
+let officialSubjs  = JSON.parse(localStorage.getItem('officialSubjs')  || '[]');
+// Compatibilidade: migrar dados antigos de disciplines_v2/subjects_v2
+(function migrate(){
+  const old = JSON.parse(localStorage.getItem('disciplines_v2')||'[]');
+  if(old.length>0 && personalDiscs.length===0){
+    personalDiscs=old.map((n,i)=>({id:'m'+i,name:n,official:false,hidden:false}));
+    savePersonalDiscs();
+  }
+  const olds = JSON.parse(localStorage.getItem('subjects_v2')||'[]');
+  if(olds.length>0 && personalSubjs.length===0){
+    personalSubjs=olds.map((n,i)=>({id:'ms'+i,discId:'',name:n,official:false,hidden:false}));
+    savePersonalSubjs();
+  }
+})();
+
+const savePersonalDiscs = () => localStorage.setItem('personalDiscs', JSON.stringify(personalDiscs));
+const saveOfficialDiscs = () => localStorage.setItem('officialDiscs', JSON.stringify(officialDiscs));
+const savePersonalSubjs = () => localStorage.setItem('personalSubjs', JSON.stringify(personalSubjs));
+const saveOfficialSubjs = () => localStorage.setItem('officialSubjs', JSON.stringify(officialSubjs));
+
+// Sincroniza arrays usados pelo Relógio (disciplines_v2 / subjects_v2)
+function syncToRelogio(){
+  const visDiscs = [
+    ...officialDiscs.filter(d=>!d.hidden).map(d=>d.name),
+    ...personalDiscs.map(d=>d.name)
+  ];
+  const visSubjs = [
+    ...officialSubjs.filter(s=>!s.hidden).map(s=>s.name),
+    ...personalSubjs.map(s=>s.name)
+  ];
+  localStorage.setItem('disciplines_v2', JSON.stringify([...new Set(visDiscs)]));
+  localStorage.setItem('subjects_v2',    JSON.stringify([...new Set(visSubjs)]));
+}
+
+// ── ESTADO ──
+let isAdmin = false;
+let currentTab = 'personal'; // 'personal' | 'official'
+let selectedDiscId = null;
+let editingDiscId = null;
+let editingSubjId = null;
+
+// ── MENU / PROFILE ──
+function openMenu()  { document.getElementById('side-menu').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMenu() { document.getElementById('side-menu').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+function toggleProfile() { document.getElementById('profile-drop').classList.toggle('open'); }
+function toggleAdminFromMenu() {
+  document.getElementById('profile-drop').classList.remove('open');
+  toggleAdmin();
+}
+
+// ── SAUDAÇÃO ──
+function setGreeting(){
+  const h=new Date().getHours();
+  const period=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  const name=localStorage.getItem('userName')||'';
+  document.getElementById('greeting-text').textContent=`Olá${name?', '+name:''}, bons estudos!`;
+  const now=new Date();
+  document.getElementById('greeting-sub').textContent=`${period} — ${DAYS_PT[now.getDay()]}, ${now.getDate()} de ${MONTHS[now.getMonth()]} de ${now.getFullYear()}`;
+  document.getElementById('profile-name').textContent=name||'Usuário';
+}
+
+// ── ABAS ──
+function setTab(tab){
+  currentTab=tab;
+  selectedDiscId=null;
+  document.getElementById('tab-personal').classList.toggle('active',tab==='personal');
+  document.getElementById('tab-official').classList.toggle('active',tab==='official');
+  renderAll();
+}
+
+// ── ADMIN ──
+function toggleAdmin(){
+  isAdmin=!isAdmin;
+  const lbl=document.getElementById('admin-menu-lbl');
+  if(lbl) lbl.textContent=isAdmin?'Sair do modo Admin':'Entrar como Admin';
+  document.getElementById('admin-badge-area').innerHTML=isAdmin
+    ?'<span style="background:var(--green);color:#fff;padding:4px 12px;border-radius:var(--r);font-size:0.78rem;font-weight:600;">Admin Ativo</span>'
+    :'';
+  renderAll();
+}
+
+// ── RENDER PRINCIPAL ──
+function renderAll(){
+  renderDiscList();
+  renderSubjPanel();
+  updateAddButtons();
+  updateTabNote();
+}
+
+function updateTabNote(){
+  const note=document.getElementById('tab-note');
+  if(currentTab==='official'&&!isAdmin){
+    note.innerHTML='<div class="admin-only-note">Somente o administrador pode adicionar ou remover conteúdos oficiais. Você pode ocultar os que não deseja ver nas suas seleções.</div>';
+  } else {
+    note.innerHTML='';
+  }
+}
+
+function updateAddButtons(){
+  const addDiscBtn=document.getElementById('add-disc-btn');
+  const addSubjBtn=document.getElementById('add-subj-btn');
+  // Mostrar botão de adicionar disciplina: sempre na aba pessoal; só admin na oficial
+  addDiscBtn.style.display=(currentTab==='personal'||isAdmin)?'block':'none';
+  // Botão de adicionar assunto: só aparece se disciplina selecionada + permissão
+  const hasDisc=!!selectedDiscId;
+  const canAddSubj=hasDisc&&(currentTab==='personal'||isAdmin);
+  addSubjBtn.style.display=canAddSubj?'block':'none';
+}
+
+// ── LISTA DE DISCIPLINAS ──
+function renderDiscList(){
+  const list=document.getElementById('disc-list'); list.innerHTML='';
+  const discs = currentTab==='personal' ? personalDiscs : officialDiscs;
+  if(discs.length===0){
+    const empty=document.createElement('div'); empty.className='disc-empty';
+    empty.textContent=currentTab==='personal'?'Nenhuma disciplina adicionada ainda.':'Nenhuma disciplina oficial cadastrada.';
+    list.appendChild(empty); return;
+  }
+  discs.forEach(d=>{
+    const li=document.createElement('li'); li.className='disc-item'+(d.id===selectedDiscId?' active':'')+(d.hidden?' disc-hidden':'');
+    const nameEl=document.createElement('div'); nameEl.className='disc-item-name'; nameEl.textContent=d.name;
+    if(d.hidden) nameEl.style.opacity='0.45';
+    li.appendChild(nameEl);
+    // Badge
+    if(d.official){const b=document.createElement('span');b.className='disc-badge official';b.textContent='Oficial';li.appendChild(b);}
+    if(d.hidden){const b=document.createElement('span');b.className='disc-badge hidden-badge';b.textContent='Oculto';li.appendChild(b);}
+    // Ações
+    const acts=document.createElement('div'); acts.className='disc-acts';
+    const canEdit=currentTab==='personal'||isAdmin;
+    const canDel=currentTab==='personal'||isAdmin;
+    if(canEdit){
+      const eb=document.createElement('button'); eb.className='disc-btn edit'; eb.title='Editar'; eb.innerHTML='&#9998;';
+      eb.onclick=e=>{e.stopPropagation();openDiscModalEdit(d.id);}; acts.appendChild(eb);
+    }
+    // Ocultar/mostrar (todos podem ocultar oficiais)
+    if(currentTab==='official'){
+      const hb=document.createElement('button'); hb.className='disc-btn hide'; hb.title=d.hidden?'Mostrar':'Ocultar';
+      hb.innerHTML=d.hidden?'&#x1F441;':'&#x1F648;';
+      hb.onclick=e=>{e.stopPropagation();toggleHideDisc(d.id);}; acts.appendChild(hb);
+    }
+    if(canDel){
+      const db=document.createElement('button'); db.className='disc-btn del'; db.title='Excluir'; db.innerHTML='&#x2715;';
+      db.onclick=e=>{e.stopPropagation();deleteDisc(d.id);}; acts.appendChild(db);
+    }
+    li.appendChild(acts);
+    li.onclick=()=>selectDisc(d.id);
+    list.appendChild(li);
+  });
+}
+
+function selectDisc(id){
+  selectedDiscId=id; renderAll();
+}
+
+function toggleHideDisc(id){
+  const d=officialDiscs.find(d=>d.id===id); if(!d)return;
+  d.hidden=!d.hidden; saveOfficialDiscs(); syncToRelogio(); renderAll();
+}
+function deleteDisc(id){
+  if(!confirm('Excluir esta disciplina? Os assuntos vinculados a ela também serão removidos.'))return;
+  if(currentTab==='personal'){
+    personalDiscs=personalDiscs.filter(d=>d.id!==id);
+    personalSubjs=personalSubjs.filter(s=>s.discId!==id);
+    savePersonalDiscs(); savePersonalSubjs();
+  }else{
+    if(!isAdmin)return;
+    officialDiscs=officialDiscs.filter(d=>d.id!==id);
+    officialSubjs=officialSubjs.filter(s=>s.discId!==id);
+    saveOfficialDiscs(); saveOfficialSubjs();
+  }
+  if(selectedDiscId===id) selectedDiscId=null;
+  syncToRelogio(); renderAll();
+}
+
+// ── PAINEL DE ASSUNTOS ── 
+function renderSubjPanel(){
+  const content=document.getElementById('subj-content');
+  const titleEl=document.getElementById('subj-panel-title');
+  if(!selectedDiscId){
+    titleEl.innerHTML='Selecione uma disciplina <span>para ver os assuntos</span>';
+    content.innerHTML='<div class="no-disc-selected">Clique em uma disciplina à esquerda para ver e editar seus assuntos.</div>';
+    return;
+  }
+  const discs=currentTab==='personal'?personalDiscs:officialDiscs;
+  const disc=discs.find(d=>d.id===selectedDiscId);
+  if(!disc){selectedDiscId=null;renderSubjPanel();return;}
+  titleEl.innerHTML=`${disc.name} <span>${currentTab==='official'?'Oficial':'Pessoal'}</span>`;
+  const subjArr=currentTab==='personal'
+    ?personalSubjs.filter(s=>s.discId===selectedDiscId)
+    :officialSubjs.filter(s=>s.discId===selectedDiscId);
+  const list=document.createElement('ul'); list.className='subj-list';
+  if(subjArr.length===0){
+    const empty=document.createElement('div'); empty.className='subj-empty';
+    empty.textContent='Nenhum assunto cadastrado para esta disciplina.';
+    content.innerHTML=''; content.appendChild(empty); return;
+  }
+  subjArr.forEach(s=>{
+    const li=document.createElement('li'); li.className='subj-item';
+    const nameEl=document.createElement('div'); nameEl.className='subj-item-name';
+    nameEl.textContent=s.name; if(s.hidden) nameEl.style.opacity='0.45';
+    li.appendChild(nameEl);
+    if(s.hidden){const b=document.createElement('span');b.className='subj-badge hidden-badge';b.textContent='Oculto';li.appendChild(b);}
+    const acts=document.createElement('div'); acts.className='subj-acts';
+    const canEdit=currentTab==='personal'||isAdmin;
+    const canDel=currentTab==='personal'||isAdmin;
+    if(canEdit){const eb=document.createElement('button');eb.className='subj-btn edit';eb.title='Editar';eb.innerHTML='&#9998;';eb.onclick=()=>openSubjModalEdit(s.id);acts.appendChild(eb);}
+    if(currentTab==='official'){const hb=document.createElement('button');hb.className='subj-btn';hb.title=s.hidden?'Mostrar':'Ocultar';hb.innerHTML=s.hidden?'&#x1F441;':'&#x1F648;';hb.onclick=()=>toggleHideSubj(s.id);acts.appendChild(hb);}
+    if(canDel){const db=document.createElement('button');db.className='subj-btn del';db.title='Excluir';db.innerHTML='&#x2715;';db.onclick=()=>deleteSubj(s.id);acts.appendChild(db);}
+    li.appendChild(acts); list.appendChild(li);
+  });
+  content.innerHTML=''; content.appendChild(list);
+}
+
+function toggleHideSubj(id){
+  const s=officialSubjs.find(s=>s.id===id); if(!s)return;
+  s.hidden=!s.hidden; saveOfficialSubjs(); syncToRelogio(); renderSubjPanel();
+}
+function deleteSubj(id){
+  if(!confirm('Excluir este assunto?'))return;
+  if(currentTab==='personal'){personalSubjs=personalSubjs.filter(s=>s.id!==id);savePersonalSubjs();}
+  else{if(!isAdmin)return;officialSubjs=officialSubjs.filter(s=>s.id!==id);saveOfficialSubjs();}
+  syncToRelogio(); renderSubjPanel();
+}
+
+// ── MODAL DISCIPLINA ──
+function openDiscModal(){
+  editingDiscId=null;
+  document.getElementById('disc-modal-title').textContent=currentTab==='official'?'Nova disciplina oficial':'Nova disciplina';
+  document.getElementById('disc-input').value='';
+  document.getElementById('disc-save-btn').className='m-save'+(currentTab==='official'?'':' ');
+  document.getElementById('disc-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('disc-input').focus(),80);
+}
+function openDiscModalEdit(id){
+  const arr=currentTab==='personal'?personalDiscs:officialDiscs;
+  const d=arr.find(d=>d.id===id); if(!d)return;
+  editingDiscId=id;
+  document.getElementById('disc-modal-title').textContent='Editar disciplina';
+  document.getElementById('disc-input').value=d.name;
+  document.getElementById('disc-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('disc-input').focus(),80);
+}
+function closeDiscModal(){document.getElementById('disc-modal').classList.remove('open');editingDiscId=null;}
+function saveDisc(){
+  const name=document.getElementById('disc-input').value.trim(); if(!name)return;
+  if(editingDiscId){
+    const arr=currentTab==='personal'?personalDiscs:officialDiscs;
+    const d=arr.find(d=>d.id===editingDiscId); if(d) d.name=name;
+    if(currentTab==='personal') savePersonalDiscs(); else saveOfficialDiscs();
+  }else{
+    const id=Date.now().toString();
+    const obj={id,name,official:currentTab==='official',hidden:false};
+    if(currentTab==='personal'){personalDiscs.push(obj);savePersonalDiscs();}
+    else{if(!isAdmin)return alert('Apenas o admin pode adicionar disciplinas oficiais.');officialDiscs.push(obj);saveOfficialDiscs();}
+  }
+  closeDiscModal(); syncToRelogio(); renderAll();
+}
+
+// ── MODAL ASSUNTO ──
+function openSubjModal(){
+  if(!selectedDiscId)return;
+  editingSubjId=null;
+  const discs=currentTab==='personal'?personalDiscs:officialDiscs;
+  const disc=discs.find(d=>d.id===selectedDiscId);
+  document.getElementById('subj-modal-title').textContent='Novo assunto';
+  document.getElementById('subj-modal-disc-lbl').textContent=disc?disc.name:'';
+  document.getElementById('subj-input').value='';
+  document.getElementById('subj-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('subj-input').focus(),80);
+}
+function openSubjModalEdit(id){
+  const arr=currentTab==='personal'?personalSubjs:officialSubjs;
+  const s=arr.find(s=>s.id===id); if(!s)return;
+  editingSubjId=id;
+  document.getElementById('subj-modal-title').textContent='Editar assunto';
+  document.getElementById('subj-input').value=s.name;
+  document.getElementById('subj-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('subj-input').focus(),80);
+}
+function closeSubjModal(){document.getElementById('subj-modal').classList.remove('open');editingSubjId=null;}
+function saveSubj(){
+  const name=document.getElementById('subj-input').value.trim(); if(!name)return;
+  if(editingSubjId){
+    const arr=currentTab==='personal'?personalSubjs:officialSubjs;
+    const s=arr.find(s=>s.id===editingSubjId); if(s) s.name=name;
+    if(currentTab==='personal') savePersonalSubjs(); else saveOfficialSubjs();
+  }else{
+    if(!selectedDiscId)return;
+    const id=Date.now().toString();
+    const obj={id,discId:selectedDiscId,name,official:currentTab==='official',hidden:false};
+    if(currentTab==='personal'){personalSubjs.push(obj);savePersonalSubjs();}
+    else{if(!isAdmin)return alert('Apenas o admin pode adicionar assuntos oficiais.');officialSubjs.push(obj);saveOfficialSubjs();}
+  }
+  closeSubjModal(); syncToRelogio(); renderSubjPanel();
+}
+
+// ── ENTER nos modais ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    if(document.getElementById('disc-modal').classList.contains('open'))saveDisc();
+    if(document.getElementById('subj-modal').classList.contains('open'))saveSubj();
+  }
+});
+
+// ── INIT ──
+function init(){
+  setGreeting();
+  renderAll();
+  document.addEventListener('click',e=>{
+    if(!document.getElementById('profile-wrap').contains(e.target))
+      document.getElementById('profile-drop').classList.remove('open');
+  });
+}
+init();
+</script>
+</body>
+</html>
